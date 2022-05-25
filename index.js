@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 require('dotenv').config();
-const port =process.env.PORT || 5000;
+const port = process.env.PORT || 5000;
 const { MongoClient, ServerApiVersion } = require('mongodb');
 
 
@@ -15,13 +15,23 @@ app.use(express.json());
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.xowczx7.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
-async function run(){
+async function run() {
 
-    try{
+    try {
         await client.connect();
-        console.log('database connected')
+        const partsCollection = client.db("pc_help").collection("parts");
+
+        // get all parts
+        app.get('/parts', async(req, res)=>{
+            const quary = {};
+            const cursor = partsCollection.find(quary);
+            const parts = await cursor.toArray();
+            res.send(parts);
+        })
+        
+
     }
-    finally{
+    finally {
 
     }
 
@@ -32,9 +42,9 @@ async function run(){
 run().catch(console.dir);
 // --------------------------------------------------------
 app.get('/', (req, res) => {
-  res.send('Hello From PC help!')
+    res.send('Hello From PC help!')
 })
 
 app.listen(port, () => {
-  console.log(`PC help app listening on port ${port}`)
+    console.log(`PC help app listening on port ${port}`)
 })
