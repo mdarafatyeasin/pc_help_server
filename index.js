@@ -20,6 +20,15 @@ async function run() {
     try {
         await client.connect();
         const partsCollection = client.db("pc_help").collection("parts");
+        const orderCollection = client.db("pc_help").collection("orders");
+        const reviewCollection = client.db("pc_help").collection("review");
+
+
+        /**API Naming Convention
+         * ------------------------
+         * app.get('/parts') get all parts
+         * app.get('/parts/:id') get a single part for purchase
+         */
 
         // get all parts
         app.get('/parts', async(req, res)=>{
@@ -37,6 +46,36 @@ async function run() {
             res.send(part);
         })
         
+        
+        // post a order from client
+        app.post('/order', async(req, res)=>{
+            const order = req.body;
+            const result = await orderCollection.insertOne(order);
+            res.send(result);
+        })
+
+        // get user orders
+        app.get('/order', async(req, res)=>{
+            const email = req.query.email;
+            const query = {email:email};
+            const order = await orderCollection.find(query).toArray();
+            res.send(order)
+        })
+
+        // post a review form client
+        app.post('/review', async(req, res)=>{
+            const review = req.body;
+            const result = await reviewCollection.insertOne(review);
+            res.send(result);
+        })
+
+        // get the review from mongodb
+        app.get('/review', async(req, res)=>{
+            const query = {};
+            const cursor = reviewCollection.find(query);
+            const result = await cursor.toArray();
+            res.send(result);
+        })
 
     }
     finally {
