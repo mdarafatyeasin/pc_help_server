@@ -22,6 +22,7 @@ async function run() {
         const partsCollection = client.db("pc_help").collection("parts");
         const orderCollection = client.db("pc_help").collection("orders");
         const reviewCollection = client.db("pc_help").collection("review");
+        const usersCollection = client.db("pc_help").collection("users");
 
 
         /**API Naming Convention
@@ -75,6 +76,19 @@ async function run() {
             const cursor = reviewCollection.find(query);
             const result = await cursor.toArray();
             res.send(result);
+        })
+
+        // put the user
+        app.put('/user/:email', async(req, res)=>{
+            const email = req.params.email;
+            const user = req.body;
+            const filter = {email:email};
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: user,
+              };
+              const result = await usersCollection.updateOne(filter, updateDoc, options);
+              res.send(result)
         })
 
     }
