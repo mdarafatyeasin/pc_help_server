@@ -93,6 +93,17 @@ async function run() {
               res.send({result,token})
         })
 
+        // put the user admin
+        app.put('/users/admin/:email', async(req, res)=>{
+            const email = req.params.email;
+            const filter = {email:email};
+            const updateDoc = {
+                $set: {role: 'admin'},
+              };
+              const result = await usersCollection.updateOne(filter, updateDoc);
+              res.send(result)
+        })
+
         // get all users from database
         app.get('/users', async(req, res)=>{
             const query = {};
