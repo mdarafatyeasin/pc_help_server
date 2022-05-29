@@ -93,6 +93,14 @@ async function run() {
               res.send({result,token})
         })
 
+        // get all users from database
+        app.get('/users', async(req, res)=>{
+            const query = {};
+            const cursor = usersCollection.find(query);
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
     }
     finally {
 
