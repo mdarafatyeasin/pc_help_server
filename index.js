@@ -117,6 +117,13 @@ async function run() {
           });
         // -----------------------------
 
+        // requair admin
+        app.get('/admin/:email', async(req, res)=>{
+            const email = req.params.email;
+            const user = await usersCollection.findOne({email: email})
+            const isAdmin = user.role === 'admin'
+            res.send({admin: isAdmin})
+        })
 
         // get all users from database
         app.get('/users', async(req, res)=>{
