@@ -9,3 +9,4 @@
 * app.patch is not used
 * app.delete is also not used
 * jwt token implemented
+* deployed in heroku
